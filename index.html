@@ -1,85 +1,70 @@
 <!doctype html>
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>  
-  <title>Happy Valentine's Day Bianchie!</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Valentine's Day Bianchie!</title>
 <link rel="icon" type="image/jpg" href="favicon.jpg">
 <style>
-body {
-	background-image: url('tandem_grey.png');
-}
-body::before {
-	content: url('tandem_grey.png') url('broken.png') url('clock.png') url('colors.png')  url('theCertificate.png') url('thePerks.png');
-	display: none;
-}
-.certificate {
-	background-color: #fff;
-	background-image: url('theCertificate.png');
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	box-shadow: 0 0 5px #888;}
-.benefits {
-	background-color: #fff;
-	background-image: url('thePerks.png');
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	box-shadow: 0 0 5px #888;}
-}
-.no {
-	background-image: url('broken.png');
-}
-.yes {
-	background-image: url('colors.png');
-}
-.maybe {
-	background-image: url('clock.png');
-}
-#image {
-	width: 90%;
-	max-width: 780px;
-	aspect-ratio: 780 / 517;
-	margin: 20px auto;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-}
-</style>
+  /* BODY: Tiles the background images */
+  body { 
+    background-image: url('tandem_grey.png'); 
+    background-repeat: repeat; /* This makes it tile */
+    margin: 0; 
+    min-height: 100vh;
+  }
+
+  /* IMAGE CONTAINER: Centers the main image (Certificate/Perks) */
+  #img { 
+    width: 90%; 
+    max-width: 780px; 
+    aspect-ratio: 780/517; 
+    margin: 20px auto; 
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
   
+  /* Preload images */
+  body::after { 
+    content: url('broken.png') url('clock.png') url('colors.png') url('theCertificate.png') url('thePerks.png');
+    display: none; 
+  }
+  
+  /* Background States (Tiled) */
+  .yes { background-image: url('colors.png'); }
+  .no { background-image: url('broken.png'); }
+  .maybe { background-image: url('clock.png'); }
+
+  /* Image States (Single Image) */
+  .cert { background-image: url('theCertificate.png'); box-shadow: 0 0 5px #888; }
+  .perks { background-image: url('thePerks.png'); box-shadow: 0 0 5px #888; }
+</style>
 </head>
 <body>
-	<script type="text/javascript">
-	var beardedBoo = function() {
-		var body = $('body'),
-		    image = $("#image");
-		body.removeClass("no").removeClass("maybe")
-		image.removeClass("benefits").removeClass("certificate")
-		var answer = prompt("Will you be my valentine? Yes, No, Maybe?").toLowerCase()
-		if (answer == "yes" || answer == 'y') {
-			body.addClass("yes")
-			image.addClass("certificate")
-		} else if (answer == "maybe" || answer == 'm') {
-			body.addClass("maybe")
-			setTimeout(beardedBoo, 6000)
-			setTimeout(function() {
-				alert("Perhaps you are not aware of the many benefits")
-				image.addClass("benefits")
-			}, 200)
-		} else {
-			body.addClass("no")
-			setTimeout(function() {
-				alert("Say it isn't so. Please try again.")
-				beardedBoo()
-			}, 200)
-		}
-	}
-    setTimeout(beardedBoo, 300)
-	</script>
+<div id="img"></div>
+<script>
+  const ask = () => {
+    let b = document.body, i = document.getElementById('img');
+    
+    // Reset classes (keeps original tandem_grey on body if no class added)
+    b.className = ''; i.className = ''; 
+    
+    let a = (prompt("Will you be my valentine? Yes, No, Maybe?") || "").toLowerCase().charAt(0);
 
-<div id="image"></div>
- 
+    if (a === 'y') {
+      b.className = 'yes';
+      i.className = 'cert';
+    } else if (a === 'm') {
+      b.className = 'maybe';
+      setTimeout(() => { alert("Perhaps you are not aware of the many benefits"); i.className = 'perks'; }, 200);
+      setTimeout(ask, 6000);
+    } else {
+      b.className = 'no';
+      setTimeout(() => { alert("Say it isn't so. Please try again."); ask(); }, 200);
+    }
+  };
+  setTimeout(ask, 300);
+</script>
 </body>
 </html>
